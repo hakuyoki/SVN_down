@@ -1,0 +1,46 @@
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
+import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
+import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
+import org.tmatesoft.svn.core.internal.wc.SVNProperties;
+import org.tmatesoft.svn.core.io.SVNRepository;
+import org.tmatesoft.svn.core.wc.ISVNOptions;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNRevision;
+import org.tmatesoft.svn.core.wc.SVNUpdateClient;
+import org.tmatesoft.svn.core.wc.SVNWCUtil;
+
+public class test_svn {
+	 //private static SVNClientManager ourClientManager;
+	public static void main(String[] args) throws SVNException {
+		String url = "https://";
+
+	    String name = "";
+	    String password = "";
+	    String localPath="C:\\test";
+	    DAVRepositoryFactory.setup();       // urlが http, https
+	    //SVNRepositoryFactoryImpl.setup(); // urlが svn, svn+ssh
+	    //FSRepositoryFactory.setup();      // urlが file
+       
+        SVNURL repositoryURL = null;
+        repositoryURL = SVNURL.parseURIEncoded(url);
+   
+        ISVNOptions options = SVNWCUtil.createDefaultOptions(true);
+        SVNClientManager ourClientManager = SVNClientManager.newInstance((DefaultSVNOptions) options, name, password);
+        File wcDir = new File(localPath);
+        SVNUpdateClient updateClient = ourClientManager.getUpdateClient();
+        updateClient.setIgnoreExternals(false);
+     
+		long workingVersion= updateClient.doCheckout(repositoryURL, wcDir, SVNRevision.HEAD, SVNRevision.HEAD, true);
+          
+		 System.out.println(workingVersion);
+		 
+	}
+}
